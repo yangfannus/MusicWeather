@@ -1,10 +1,7 @@
 const weatherResolvers = require('./weatherResolvers');
 
-// Combine all resolvers
-const resolvers = {
+module.exports = {
   Query: {
     ...weatherResolvers.Query
   }
 };
-
-module.exports = resolvers; 
