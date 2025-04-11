@@ -18,22 +18,22 @@ export default function MusicChordPage() {
   const [generatedChordImages, setGeneratedChordImages] = useState([]);
   const [showChordGame, setShowChordGame] = useState(false);
   
-  // Impersonate user login status
+  // 模拟用户登录状态
   const openLoginModal = () => {
-    // This should open the login modal window
-    setIsLoggedIn(true); // The simulated login is successful
+    // 这里应该打开登录模态窗口
+    setIsLoggedIn(true); // 模拟登录成功
   };
   
   const openRegisterModal = () => {
-    // This should open the registration modal window
-    setIsLoggedIn(true); // Simulated registration and login successfully
+    // 这里应该打开注册模态窗口
+    setIsLoggedIn(true); // 模拟注册并登录成功
   };
   
   const handleLogout = () => {
     setIsLoggedIn(false);
   };
 
-  // Get weather data to set the background
+  // 获取天气数据以设置背景
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
@@ -48,7 +48,7 @@ export default function MusicChordPage() {
     fetchWeatherData();
   }, []);
   
-  // Generate background classes based on the weather
+  // 根据天气生成背景类
   const getBackgroundClass = () => {
     if (!weather) return 'bg-[url("/images/default.png")] bg-cover bg-center bg-no-repeat bg-fixed backdrop-blur-sm bg-blend-overlay';
     
@@ -66,7 +66,7 @@ export default function MusicChordPage() {
     }
   };
 
-  // Instrument data
+  // 乐器数据
   const instruments = [
     {
       id: 'piano',
@@ -134,15 +134,15 @@ export default function MusicChordPage() {
     }
   ];
 
-  // Search for music
+  // 搜索音乐
   const handleSearch = () => {
     if (!searchQuery.trim()) return;
     
     setIsSearching(true);
     
-    // Simulate API calls
+    // 模拟 API 调用
     setTimeout(() => {
-      // Simulate search result data
+      // 模拟搜索结果数据
       const mockResults = [
         {
           id: '1',
@@ -186,19 +186,19 @@ export default function MusicChordPage() {
     }, 1000);
   };
 
-  // Add chords to the picklist
+  // 添加和弦到选择列表
   const addChord = (chord) => {
     setSelectedChords([...selectedChords, chord]);
   };
   
-  // Removes chords from the picklist
+  // 从选择列表移除和弦
   const removeChord = (index) => {
     const newChords = [...selectedChords];
     newChords.splice(index, 1);
     setSelectedChords(newChords);
   };
   
-  // Play a preview of the music
+  // 播放音乐预览
   const playAudio = (url) => {
     if (currentAudio) {
       currentAudio.pause();
@@ -215,7 +215,7 @@ export default function MusicChordPage() {
     });
   };
   
-  // Pause the music preview
+  // 暂停音乐预览
   const pauseAudio = () => {
     if (currentAudio) {
       currentAudio.pause();
@@ -223,11 +223,11 @@ export default function MusicChordPage() {
     }
   };
   
-  // Create a chord picture
+  // 创建和弦图片
   const generateChordImages = () => {
     if (selectedChords.length === 0) return;
     
-    // Simulate an API call to generate a chord image
+    // 模拟API调用生成和弦图片
     const images = selectedChords.map((chord, index) => ({
       id: `img-${index}`,
       url: `https://picsum.photos/id/${20 + index}/300/200`,
@@ -239,14 +239,14 @@ export default function MusicChordPage() {
     setShowChordGame(true);
   };
 
-  // Create chords directly from search results
+  // 直接从搜索结果创建和弦
   const createChordsFromSearchResult = (result) => {
-    // The simulation automatically selects the appropriate chord based on the song information
-    const instrumentId = 'guitar'; // The guitar is used by default
+    // 模拟根据歌曲信息自动选择适合的和弦
+    const instrumentId = 'guitar'; // 默认使用吉他
     const instrument = instruments.find(i => i.id === instrumentId);
     
     if (instrument) {
-      // 3-4 chords are randomly selected as examples
+      // 随机选择3-4个和弦作为示例
       const randomChords = [...instrument.chords]
         .sort(() => 0.5 - Math.random())
         .slice(0, 3 + Math.floor(Math.random() * 2));
@@ -254,7 +254,7 @@ export default function MusicChordPage() {
       setSelectedInstrument(instrumentId);
       setSelectedChords(randomChords);
       
-      // Generate chord pictures
+      // 生成和弦图片
       setTimeout(() => {
         generateChordImages();
       }, 500);
@@ -282,7 +282,7 @@ export default function MusicChordPage() {
           <p className="text-white/80">Search for music and create your own chord progressions for multiple instruments</p>
         </div>
         
-        {/* Music Search Panel */}
+        {/* 音乐搜索面板 */}
         <div className="glass-dark rounded-2xl p-8 shadow-xl animate-slideUp mb-8">
           <h2 className="text-2xl font-semibold mb-6 text-white">Music Search</h2>
           <div className="mb-6">
@@ -314,7 +314,7 @@ export default function MusicChordPage() {
             </div>
           </div>
           
-          {/* Search Results */}
+          {/* 搜索结果 */}
           <div className="space-y-4">
             {searchResults.length === 0 && !isSearching && (
               <div className="text-center py-10 text-white/60">
@@ -369,13 +369,13 @@ export default function MusicChordPage() {
           </div>
         </div>
         
-        {/* Chord Creation Panel - Separate Sections */}
+        {/* 和弦创建面板 - 独立的板块 */}
         {!showChordGame && (
           <div className="animate-slideUp mb-8">
             <div className="glass-dark rounded-2xl p-6 shadow-xl mb-6">
               <h2 className="text-2xl font-semibold mb-6 text-white">Chord Creator</h2>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left: Instrument selection */}
+                {/* 左侧：乐器选择 */}
                 <div className="bg-white/5 rounded-xl p-5">
                   <h3 className="text-xl font-semibold mb-4 text-white">Select Instrument</h3>
                   <div className="space-y-2">
@@ -392,7 +392,7 @@ export default function MusicChordPage() {
                   </div>
                 </div>
                 
-                {/* Middle: Chord Selection */}
+                {/* 中间：和弦选择 */}
                 <div className="bg-white/5 rounded-xl p-5">
                   <h3 className="text-xl font-semibold mb-4 text-white">
                     {instruments.find(i => i.id === selectedInstrument)?.name} Chords
@@ -411,7 +411,7 @@ export default function MusicChordPage() {
                   </div>
                 </div>
                 
-                {/* Right: Selected chord */}
+                {/* 右侧：已选和弦 */}
                 <div className="bg-white/5 rounded-xl p-5">
                   <h3 className="text-xl font-semibold mb-4 text-white">Chord Progression</h3>
                   {selectedChords.length === 0 ? (
@@ -458,10 +458,10 @@ export default function MusicChordPage() {
           </div>
         )}
         
-        {/* Chord Picture Show & Game */}
+        {/* 和弦图片展示与游戏 */}
         {showChordGame && (
           <div className="animate-slideUp space-y-8">
-            {/* Chord Picture Show */}
+            {/* 和弦图片展示 */}
             <div className="glass-dark rounded-2xl p-6 shadow-xl">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-white">Generated Chord Images</h2>
@@ -486,7 +486,7 @@ export default function MusicChordPage() {
               </div>
             </div>
             
-            {/* Chord Game */}
+            {/* 和弦游戏 */}
             <div className="glass-dark rounded-2xl p-6 shadow-xl">
               <h2 className="text-xl font-semibold mb-6 text-white">Chord Recognition Game</h2>
               
@@ -525,7 +525,7 @@ export default function MusicChordPage() {
               </div>
             </div>
             
-            {/* Chord Presentation */}
+            {/* 和弦进行演示 */}
             <div className="glass-dark rounded-2xl p-6 shadow-xl">
               <h2 className="text-xl font-semibold mb-4 text-white">Chord Progression Demo</h2>
               

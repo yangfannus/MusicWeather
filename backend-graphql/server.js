@@ -3,43 +3,50 @@ const { ApolloServer } = require('apollo-server-express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
+const connectDB = require('./config/db');
 const typeDefs = require('./schema/typeDefs');
 const resolvers = require('./resolvers');
+const { authMiddleware } = require('./middleware/auth');
 
-// Load environment variables
+// 加载环境变量
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-// Check environment variables
-console.log('Environment variables status:');
+// 添加环境变量检查
+console.log('环境变量加载状态:');
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
-console.log('OPENWEATHER_API_KEY:', process.env.OPENWEATHER_API_KEY ? 'Set' : 'Not set');
+console.log('OPENWEATHER_API_KEY:', process.env.OPENWEATHER_API_KEY ? '已设置' : '未设置');
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? '已设置' : '未设置');
 
-// Initialize Express application
+// 连接数据库
+connectDB();
+
+// 初始化 Express 应用
 const app = express();
 
-// Middleware
+// 中间件
 app.use(cors({
-  origin: '*', // Allow all origins
+  origin: '*', // 允许所有域名访问
   credentials: true
 }));
 app.use(express.json());
 
-// Base route - provide current API information
+// 基础路由 - 提供当前 API 信息
 app.get('/', (req, res) => {
-  res.send('Weather API running, please visit /graphql endpoint');
+  res.send('GraphQL API 运行中，请访问 /graphql 端点');
 });
 
-// Async startup function
+// 异步启动函数
 async function startApolloServer() {
-  // Create Apollo Server instance
+  // 创建 Apollo Server 实例
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: authMiddleware,
     formatError: (err) => {
-      // Provide more detailed error information in development
+      // 在开发环境中提供更详细的错误信息
       if (process.env.NODE_ENV !== 'production') {
-        console.error('GraphQL Error:', err);
+        console.error('GraphQL 错误:', err);
       }
       return {
         message: err.message,
@@ -48,27 +55,27 @@ async function startApolloServer() {
         stack: process.env.NODE_ENV === 'production' ? null : err.extensions?.exception?.stacktrace
       };
     },
-    // Enable GraphQL Playground (Apollo Server 3 defaults to Apollo Studio)
+    // 启用 GraphQL Playground（Apollo Server 3 默认使用 Apollo Studio）
     playground: process.env.NODE_ENV !== 'production',
     introspection: true,
   });
 
-  // Start Apollo Server
+  // 启动 Apollo Server
   await server.start();
 
-  // Apply Apollo Server to Express
+  // 将 Apollo Server 应用到 Express
   server.applyMiddleware({ app, path: '/graphql' });
 
-  // Define port and start server
+  // 定义端口并启动服务器
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-    console.log(`GraphQL endpoint: http://localhost:${PORT}${server.graphqlPath}`);
+    console.log(`服务器在 ${process.env.NODE_ENV} 模式下的端口 ${PORT} 上运行`);
+    console.log(`GraphQL 端点：http://localhost:${PORT}${server.graphqlPath}`);
   });
 }
 
-// Start server
+// 启动服务器
 startApolloServer().catch(err => {
-  console.error('Error starting server:', err);
+  console.error('启动服务器时出错:', err);
   process.exit(1);
 }); 
