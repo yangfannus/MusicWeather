@@ -30,7 +30,7 @@ body {
   @apply antialiased;
 }
 
-/* 核心动画效果 */
+/* Core Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -53,7 +53,7 @@ body {
   100% { transform: translateY(0px); }
 }
 
-/* 实用工具类 */
+/* Utility Classes */
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-out;
 }
@@ -70,7 +70,7 @@ body {
   animation: float 6s infinite ease-in-out;
 }
 
-/* 玻璃态效果 */
+/* Glassmorphism Effect */
 .glass {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -85,14 +85,14 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* 文字渐变效果 */
+/* Text Gradient Effect */
 .text-gradient {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
 }
 
-/* 卡片悬停效果 */
+/* Card Hover Effect */
 .card-hover {
   transition: all 0.3s ease;
 }
@@ -102,7 +102,7 @@ body {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* 自定义滚动条 */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

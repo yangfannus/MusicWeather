@@ -2,46 +2,46 @@ const { getLocationByIp, getCurrentWeather, getWeatherForecast } = require('../u
 
 const weatherResolvers = {
   Query: {
-    // 通过 IP 获取位置信息
+    // Get location information by IP
     getLocationByIp: async (_, __, { req }) => {
       try {
-        // 获取客户端 IP 地址
+        // Get client IP address
         const ip = req.headers['x-forwarded-for'] || 
                   req.connection.remoteAddress || 
                   req.socket.remoteAddress || 
                   (req.connection.socket ? req.connection.socket.remoteAddress : null);
         
-        console.log(`客户端 IP: ${ip}`);
+        console.log(`Client IP: ${ip}`);
         
-        // 获取位置信息
+        // Get location information
         const location = await getLocationByIp(ip);
         return location;
       } catch (error) {
-        console.error('获取位置信息错误:', error.message);
-        throw new Error(`获取位置信息失败: ${error.message}`);
+        console.error('Error getting location:', error.message);
+        throw new Error(`Failed to get location: ${error.message}`);
       }
     },
     
-    // 获取当前天气
+    // Get current weather
     getCurrentWeather: async (_, { lat, lon }) => {
       try {
         return await getCurrentWeather(lat, lon);
       } catch (error) {
-        console.error('获取当前天气错误:', error.message);
-        throw new Error(`获取当前天气失败: ${error.message}`);
+        console.error('Error getting current weather:', error.message);
+        throw new Error(`Failed to get current weather: ${error.message}`);
       }
     },
     
-    // 获取天气预报
+    // Get weather forecast
     getWeatherForecast: async (_, { lat, lon }) => {
       try {
         return await getWeatherForecast(lat, lon);
       } catch (error) {
-        console.error('获取天气预报错误:', error.message);
-        throw new Error(`获取天气预报失败: ${error.message}`);
+        console.error('Error getting weather forecast:', error.message);
+        throw new Error(`Failed to get weather forecast: ${error.message}`);
       }
     }
   }
 };
 
-module.exports = weatherResolvers; 
+module.exports = weatherResolvers;
