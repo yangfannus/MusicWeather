@@ -13,25 +13,25 @@ const HomePage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      setLocationError(null); // 重置错误状态
+      setLocationError(null); // Reset error status
 
-      // 首先获取位置信息
+      // First get location information
       const locationData = await getLocation();
       setLocation(locationData);
       
-      // 根据位置获取天气
+      // Get weather based on location
       const weatherData = await getWeather(locationData.lat, locationData.lon);
       setWeather(weatherData);
       
-      // 获取音乐推荐
+      // Get music recommendations
       const tracks = await getRecommendedTracks();
       setRecommendations(tracks);
     } catch (error) {
-      console.error('位置服务错误:', error);
+      console.error('Location service error:', error);
       setLocationError(
         error.code === 1 
-          ? '请允许位置访问权限' 
-          : '无法获取位置信息，使用默认位置'
+          ? 'Please allow location access permission' 
+          : 'Unable to get location, using default location'
       );
     } finally {
       setLoading(false);
@@ -43,7 +43,7 @@ const HomePage = () => {
       setLoading(true);
       await fetchData();
     } catch (error) {
-      console.error('刷新位置失败:', error);
+      console.error('Failed to refresh location:', error);
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 to-indigo-600 text-white p-8">
       <div className="max-w-6xl mx-auto">
-        {/* 位置和天气信息 */}
+        {/* Location and Weather Information */}
         <div className="glass animate-fadeIn mb-8 p-6 rounded-xl">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">
@@ -86,7 +86,7 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* 推荐音乐 */}
+        {/* Recommended Music */}
         <div className="glass animate-slideUp p-6 rounded-xl">
           <h2 className="text-2xl font-bold mb-4">Recommended Music</h2>
           <div className="grid gap-4">

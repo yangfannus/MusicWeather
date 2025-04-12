@@ -1,7 +1,7 @@
 {
   "name": "backend-graphql",
   "version": "1.0.0",
-  "description": "音乐天气游戏后端 GraphQL API",
+  "description": "Weather API GraphQL Backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -1,23 +1,23 @@
 const axios = require('axios');
 
-// OpenWeatherMap API 配置
-// 使用环境变量获取 API 密钥，避免硬编码
-const API_KEY = process.env.OPENWEATHER_API_KEY; // 请在 .env 文件中配置您的 API 密钥
-console.log('Weather Utils 初始化 - 使用 API_KEY:', API_KEY || '未设置');
+// OpenWeatherMap API Configuration
+// Use environment variables to get API key, avoid hardcoding
+const API_KEY = process.env.OPENWEATHER_API_KEY; // Please configure your API key in .env file
+console.log('Weather Utils Initialization - Using API_KEY:', API_KEY || 'Not Set');
 
-// 如果 API_KEY 未设置，使用硬编码的备用密钥
+// If API_KEY is not set, use hardcoded fallback key
 const FALLBACK_KEY = '2639d8f150e48b5fb7c6fb59ca20a783';
 const FINAL_API_KEY = API_KEY || FALLBACK_KEY;
-console.log('最终使用的 API_KEY:', FINAL_API_KEY.substring(0, 3) + '...');
+console.log('Final API_KEY in use:', FINAL_API_KEY.substring(0, 3) + '...');
 
 const API_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
-// 检查 API_KEY 是否配置
+// Check if API_KEY is configured
 if (!API_KEY) {
-  console.warn('警告: OPENWEATHER_API_KEY 环境变量未设置，使用备用密钥');
+  console.warn('Warning: OPENWEATHER_API_KEY environment variable not set, using fallback key');
 }
 
-// 天气状况映射到中英文描述和图标
+// Weather condition mapping to descriptions and icons
 const weatherMapping = {
   'Clear': { condition: 'Sunny', icon: '☀️' },
   'Clouds': { condition: 'Cloudy', icon: '⛅' },
@@ -36,9 +36,9 @@ const weatherMapping = {
   'Tornado': { condition: 'Tornado', icon: '🌪️' }
 };
 
-// 获取 IP 定位信息
+// Get location information by IP
 const getLocationByIp = async (ip) => {
-  // 默认值（上海）
+  // Default location (Shanghai)
   const defaultLocation = {
     city: "Shanghai",
     country: "CN", 
@@ -47,19 +47,19 @@ const getLocationByIp = async (ip) => {
   };
 
   try {
-    // 处理 IP 地址格式
+    // Process IP address format
     const cleanIp = ip === '::1' ? '127.0.0.1' : ip.replace(/^.*:/, '');
     
-    console.log(`处理后的 IP: ${cleanIp}`);
+    console.log(`Processed IP: ${cleanIp}`);
     
-    // 对于内部 IP，直接返回默认位置
+    // For internal IPs, return default location
     if (cleanIp === '127.0.0.1' || cleanIp.startsWith('192.168.') || cleanIp.startsWith('10.') || cleanIp.startsWith('172.')) {
-      console.log('内部 IP，使用默认位置信息');
+      console.log('Internal IP detected, using default location');
       return defaultLocation;
     }
     
-    // 使用 ip-api 服务获取位置信息
-    console.log(`请求 ip-api: http://ip-api.com/json/${cleanIp}`);
+    // Use ip-api service to get location information
+    console.log(`Requesting ip-api: http://ip-api.com/json/${cleanIp}`);
     const response = await axios.get(`http://ip-api.com/json/${cleanIp}`);
     const data = response.data;
     
@@ -74,12 +74,12 @@ const getLocationByIp = async (ip) => {
       return defaultLocation;
     }
   } catch (error) {
-    console.error('IP 定位失败:', error.message);
+    console.error('IP location failed:', error.message);
     return defaultLocation;
   }
 };
 
-// 获取当前天气数据
+// Get current weather data
 const getCurrentWeather = async (lat, lon) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/weather`, {
@@ -87,14 +87,14 @@ const getCurrentWeather = async (lat, lon) => {
         lat,
         lon,
         appid: FINAL_API_KEY,
-        units: 'metric', // 使用摄氏度
-        lang: 'en'       // 返回英语结果
+        units: 'metric',
+        lang: 'en'
       }
     });
     
     const data = response.data;
     
-    // 转换为我们自己的数据格式
+    // Convert to our own data format
     const weatherCondition = data.weather[0].main;
     const mappedWeather = weatherMapping[weatherCondition] || { condition: weatherCondition, icon: '🌡️' };
     
@@ -111,12 +111,12 @@ const getCurrentWeather = async (lat, lon) => {
       pressure: data.main.pressure
     };
   } catch (error) {
-    console.error('获取天气数据错误:', error.message);
-    throw new Error(`获取天气数据失败: ${error.message}`);
+    console.error('Error getting weather data:', error.message);
+    throw new Error(`Failed to get weather data: ${error.message}`);
   }
 };
 
-// 获取天气预报
+// Get weather forecast
 const getWeatherForecast = async (lat, lon) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/forecast`, {
@@ -124,21 +124,21 @@ const getWeatherForecast = async (lat, lon) => {
         lat,
         lon,
         appid: FINAL_API_KEY,
-        units: 'metric', // 使用摄氏度
-        lang: 'en',      // 返回英语结果
-        cnt: 8           // 只返回24小时的预报（每3小时，共8次）
+        units: 'metric',
+        lang: 'en',
+        cnt: 8  // Return 24-hour forecast (every 3 hours, 8 times total)
       }
     });
     
     const data = response.data;
     
-    // 转换为我们自己的数据格式
+    // Convert to our own data format
     const forecast = data.list.map(item => {
       const weatherCondition = item.weather[0].main;
       const mappedWeather = weatherMapping[weatherCondition] || { condition: weatherCondition, icon: '🌡️' };
       
       return {
-        datetime: item.dt * 1000, // 转换为毫秒时间戳
+        datetime: item.dt * 1000, // Convert to milliseconds timestamp
         hour: new Date(item.dt * 1000).getHours(),
         temperature: Math.round(item.main.temp),
         condition: mappedWeather.condition,
@@ -155,8 +155,8 @@ const getWeatherForecast = async (lat, lon) => {
       forecast
     };
   } catch (error) {
-    console.error('获取天气预报错误:', error.message);
-    throw new Error(`获取天气预报失败: ${error.message}`);
+    console.error('Error getting weather forecast:', error.message);
+    throw new Error(`Failed to get weather forecast: ${error.message}`);
   }
 };
 
@@ -165,4 +165,4 @@ module.exports = {
   getCurrentWeather,
   getWeatherForecast,
   weatherMapping
-}; 
+};

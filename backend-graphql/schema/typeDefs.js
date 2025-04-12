@@ -1,23 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
-  # 用户类型
-  type User {
-    _id: ID!
-    username: String!
-    email: String!
-    createdAt: String
-  }
-
-  # 认证响应类型
-  type AuthResponse {
-    _id: ID!
-    username: String!
-    email: String!
-    token: String!
-  }
-  
-  # 位置信息类型
+  # Location Type
   type Location {
     city: String!
     country: String!
@@ -25,7 +9,7 @@ const typeDefs = gql`
     lon: Float!
   }
   
-  # 当前天气类型
+  # Current Weather Type
   type CurrentWeather {
     temperature: Int!
     condition: String!
@@ -39,7 +23,7 @@ const typeDefs = gql`
     pressure: Int!
   }
   
-  # 天气预报项类型
+  # Forecast Item Type
   type ForecastItem {
     datetime: Float!
     hour: Int!
@@ -51,30 +35,20 @@ const typeDefs = gql`
     humidity: Int!
   }
   
-  # 天气预报类型
+  # Weather Forecast Type
   type WeatherForecast {
     city: String!
     country: String!
     forecast: [ForecastItem!]!
   }
   
-  # 查询
+  # Query
   type Query {
-    # 用户查询
-    me: User                           # 获取当前登录用户信息
-    
-    # 天气查询
-    getLocationByIp: Location          # 通过IP获取位置信息
-    getCurrentWeather(lat: Float!, lon: Float!): CurrentWeather  # 获取当前天气
-    getWeatherForecast(lat: Float!, lon: Float!): WeatherForecast  # 获取天气预报
-  }
-  
-  # 修改
-  type Mutation {
-    # 用户认证相关
-    register(username: String!, email: String!, password: String!): AuthResponse  # 注册
-    login(email: String!, password: String!): AuthResponse                       # 登录
+    # Weather Queries
+    getLocationByIp: Location          # Get location by IP
+    getCurrentWeather(lat: Float!, lon: Float!): CurrentWeather  # Get current weather
+    getWeatherForecast(lat: Float!, lon: Float!): WeatherForecast  # Get weather forecast
   }
 `;
 
-module.exports = typeDefs; 
+module.exports = typeDefs;
